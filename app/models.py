@@ -1,8 +1,8 @@
-from datetime import datetime
-from app import db
+from flask_sqlalchemy import SQLAlchemy
 
-class ShortURL(db.Model):
+db = SQLAlchemy()
+
+class URL(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    original_url = db.Column(db.String(2048), nullable=False)
-    shortcode = db.Column(db.String(10), nullable=False, unique=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    original_url = db.Column(db.String(255), nullable=False)
+    shortcode = db.Column(db.String(8), unique=True, nullable=False)
