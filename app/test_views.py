@@ -39,8 +39,6 @@ def test_redirect_to_original_url(test_client):
     assert response.status_code == 302
     assert response.location == original_url
 
-
-
 def test_invalid_shortcode(test_client):
     response = test_client.get('/invalidshortcode')
     assert response.status_code == 404
