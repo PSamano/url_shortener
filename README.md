@@ -127,6 +127,116 @@ Decidí utilizar Flask envés de Serverless Framework y AWS Lambda por varios mo
 
 **Escalabilidad**: Para este challenge en particular, la implementación de una aplicación Flask es más que suficiente para satisfacer los requisitos de escalabilidad. Si bien AWS Lambda puede proporcionar beneficios de escalabilidad adicionales, estos podrían no ser necesarios en este caso y podrían complicar innecesariamente la solución.
 
+## CON PUNTOS EXTRA
+
+Se realizo la implementación adecuada con Serverless Framework y AWS Lambda con DynamoDB para cumplir los "puntos extra" del challenge.
+
+# Deploy para AWS (Plantilla-Pasos)
+
+## Requisitos
+
+- AWS CLI
+- Serverless Framework
+- npm
+- boto3
+
+## Configurar AWS CLI:
+
+Instala AWS CLI (Command Line Interface) en tu máquina local. Después de instalar AWS CLI, tendrás que configurar tus credenciales de AWS utilizando *aws configure* para poder interactuar con tu cuenta de AWS desde tu línea de comandos.
+
+## Instalar npm:
+
+Instala npm globalmente en tu máquina local siguiendo los pasos de instalacion en: https://nodejs.org/en/download
+
+## Instalar Serverless Framework
+
+Instala Serverless Framework globalmente en tu máquina local usando npm con npm install -g serverless.
+
+## Crear un nuevo servicio Serverless
+```
+serverless create --template aws-python3 --path url_shortener.
+```
+
+## Estructura de directorios
+
+Navega a tu nuevo servicio. Encontrarás un archivo serverless.yml y un archivo handler.py. El archivo **serverless.yml** es donde defines tu infraestructura y el **handler.py** es donde escribes tu código de Python.
+
+## Definir la infraestructura
+
+En el archivo serverless.yml, debes definir tus funciones de Lambda y cualquier recurso adicional, como la tabla de **DynamoDB**, que necesitarás para tu servicio. Las funciones que definirías serían la función que crea la URL corta y la función que redirige a la URL original a partir de la URL corta. Estas funciones se referirían a los métodos en tu handler.py.
+
+## Implementar la lógica de la aplicación:
+
+En el archivo **handler.py**, implementas la lógica para acortar la URL y redirigir a la URL original. Utilizarías el SDK de AWS para Python (boto3) para interactuar con DynamoDB.
+
+## Desplegar el servicio
+Una vez que hayas definido tu infraestructura y escrito tu lógica de aplicación, puedes desplegar tu servicio con
+```
+serverless deploy
+```
+
+# Deploy en AWS url_shortener
+
+Crear-tener cuenta en AWS, instalar el cli de aws y utilizar aws configure, este tendra varios prompts los cuales te pedira:
+
+### AWS Access Key ID
+
+Este lo puedes encontrar al buscar en los servicios de AWS como **IAM console**, dentro de la misma en la seccion de **Access keys** crear una nueva, ahi mismo encontraras el *Access key ID* que pide en este prompt
+
+### AWS Secret Access Key
+Lo encontraras alado de la *Access key ID*
+
+### Default region name
+Esta es la región donde se encontrarán los servicios, te recomiendo basarte en la posición geográfica más cercana al objetivo del proyecto, en este caso puedes encontrar las regiones en la parte superior derecha al lado de tu nombre de usuario y desplegar la lista de regiones, el texto que debes poner es la cadena a la derecha de la región, ejemplo:
+
+US East (Ohio) --> **us-east-2**
+
+### Default output format
+Este simplemente poner **json**
+
+## Serverless framework
+Crear el nuevo servicio con Serverless framework
+```
+serverless create --template aws-python3 --path url_shortener.
+```
+
+### Configurar Serverless Framework (serverless.yml)
+Modificar las varibles:
+- service (nombre del servicio)
+- region
+- functions (estas dependen del handler.py)
+- resources (conforme al recurso utilizado, este caso DynamoDB)
+
+### Implementar la lógica de la aplicación (handler.py):
+Se implementa la lógica para acortar la URL y redirigir a la URL original. Utilizando el SDK de AWS para Python (boto3) para interactuar con DynamoDB.
+
+## Desplegar el servicio:
+
+Para desplegar el servicio, ejecutar **serverless deploy** en la raíz de tu directorio. Este comando crea la infraestructura necesaria en AWS, incluyendo las funciones de AWS Lambda y la tabla de DynamoDB (las cuales puedes visualizar en el portal de AWS).
+
+## Probar el servicio
+Utilizando el archivo *aws/url_shortener/simple_test.py* se puede probar el servicio en "vivo", requiriendo actualizar las urls de los metodos POST y GET, puedes obtener esto a partir del resultado del comando *sls deploy*, o visitando la consola de AWS API Gateway y buscando el API correspondiente.
+
+## Desarrollo a futuro
+- Implementar pytest en el servicio de Serverless Framework.
+- Implementar el uso de herramientas CI/CD para utilizar esta guia en proyectos mas robustos.
+
+## Beneficios de implementar el servicio con Serverless Framework en AWS
+
+**Escalabilidad automática**: Una de las principales ventajas de AWS Lambda (y el cómputo sin servidor en general) es que escala automáticamente para manejar la carga de trabajo. No necesitas preocuparte por la administración de servidores o por decidir cuántos recursos reservar para tu aplicación.
+
+**Costos basados en el uso**: Con AWS Lambda, solo pagas por el tiempo de cómputo que utilizas. Esto puede ser mucho más eficiente en términos de costos que pagar por un servidor dedicado que puede no estar en uso todo el tiempo.
+
+**Desarrollo centrado en el producto**: Al usar Serverless Framework y AWS Lambda, puedes centrarte más en el desarrollo de tu aplicación y menos en la infraestructura subyacente. Esto puede acelerar el tiempo de desarrollo y permitirte lanzar nuevas características y actualizaciones más rápidamente.
+
+**Mantenimiento reducido**: No tienes que preocuparte por parchar los servidores o mantener la infraestructura actualizada. AWS se encarga de todo esto por ti.
+
+**Integraciones y servicios complementarios de AWS**: Al usar AWS, tienes acceso a una amplia gama de servicios y características adicionales que puedes integrar fácilmente en tu aplicación, como AWS DynamoDB para bases de datos, AWS S3 para almacenamiento, AWS CloudWatch para supervisión y registro, etc.
+
+**Seguridad**: AWS ofrece una gran cantidad de características de seguridad, como la gestión de identidades y acceso, cifrado en reposo y en tránsito, y muchas otras que ayudan a proteger tu aplicación.
+
+**Implementación y desarrollo sencillos con Serverless Framework**: Esta herramienta facilita la configuración y despliegue de tu aplicación, permitiendo un desarrollo más rápido y una mayor productividad. También apoya las mejores prácticas de DevOps, como la infraestructura como código.
+
 ## Licencia
 
 Este proyecto está licenciado bajo la licencia MIT.
